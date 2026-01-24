@@ -19,12 +19,26 @@ class GatewayTestCase(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
         self.assertIn("Integration Tests Module", rv.get_json())
 
-    def test_syspath_import(self):
-        # syspath_test/main.py imports 'helper' which is in the same folder.
-        # This requires syspath_test to be in sys.path
-        rv = self.app.get('/syspath_test/main/run')
+    def test_arg_passing_add(self):
+        rv = self.app.post('/arg_test/funcs/add', 
+                           data=json.dumps({'a': 10, 'b': 32}),
+                           content_type='application/json')
         self.assertEqual(rv.status_code, 200)
-        self.assertEqual(rv.get_json(), 'helped')
+        self.assertEqual(rv.get_json(), 42)
+
+    def test_arg_passing_legacy(self):
+        rv = self.app.post('/arg_test/funcs/echo_request', 
+                           data=json.dumps({'msg': 'hello'}),
+                           content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
+        self.assertEqual(rv.get_json(), 'hello')
+
+    def test_arg_passing_mixed(self):
+        rv = self.app.post('/arg_test/funcs/mixed', 
+                           data=json.dumps({'a': 'Title:', 'b': 'Content'}),
+                           content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
+        self.assertEqual(rv.get_json(), 'Title: Content')
 
 if __name__ == '__main__':
     unittest.main()
