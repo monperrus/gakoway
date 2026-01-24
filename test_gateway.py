@@ -19,5 +19,12 @@ class GatewayTestCase(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
         self.assertIn("Integration Tests Module", rv.get_json())
 
+    def test_syspath_import(self):
+        # syspath_test/main.py imports 'helper' which is in the same folder.
+        # This requires syspath_test to be in sys.path
+        rv = self.app.get('/syspath_test/main/run')
+        self.assertEqual(rv.status_code, 200)
+        self.assertEqual(rv.get_json(), 'helped')
+
 if __name__ == '__main__':
     unittest.main()

@@ -36,6 +36,8 @@ Returns:
 from flask import Flask, request, jsonify
 import importlib
 import os
+import sys
+import traceback
 
 
 app = Flask(__name__)
@@ -60,6 +62,9 @@ def gateway(module, file, function):
         assert ".." not in module and "/" not in module, "Invalid module"
         assert ".." not in file and "/" not in file, "Invalid file"
         
+        if os.path.abspath(module) not in sys.path:
+            sys.path.append(os.path.abspath(module))
+
         module_path = f"{module}.{file}"
         # Import the module dynamically
         if os.path.exists(os.path.join(module, file + ".py")):
@@ -78,10 +83,8 @@ def gateway(module, file, function):
             result = func()
         
         return jsonify(result)
-    except (ImportError, AttributeError) as e:
-        return jsonify({'error': str(e)}), 404
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+         return jsonify({'error': str(e), 'traceback': traceback.format_exc()}), 500
 
 if __name__ == '__main__':
     app.run()
