@@ -40,6 +40,20 @@ import os
 
 app = Flask(__name__)
 
+@app.route('/<module>/', methods=['GET'])
+def module_doc(module):
+    try:
+        assert ".." not in module and "/" not in module, "Invalid module"
+        # Check if it is a directory with __init__.py
+        if os.path.isdir(module) and os.path.exists(os.path.join(module, "__init__.py")):
+            mod = importlib.import_module(module)
+            importlib.reload(mod)
+            return jsonify(mod.__doc__)
+        else:
+            return jsonify({'error': 'Module not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/<module>/<file>/<function>', methods=['GET', 'POST'])
 def gateway(module, file, function):
     try:
