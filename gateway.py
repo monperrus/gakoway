@@ -38,6 +38,7 @@ import importlib
 import os
 import sys
 import traceback
+import inspect
 
 
 app = Flask(__name__)
@@ -78,7 +79,15 @@ def gateway(module, file, function):
         
         # Call the function with request data
         if request.method == 'POST':
-            result = func(request = request.get_json())
+            data = request.get_json()
+            sig = inspect.signature(func)
+            kwargs = {}
+            for name in sig.parameters:
+                if name in data:
+                    kwargs[name] = data[name]
+                elif name == 'request':
+                    kwargs['request'] = data
+            result = func(**kwargs)
         else:
             result = func()
         
