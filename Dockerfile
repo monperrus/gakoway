@@ -6,10 +6,11 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copy the dependencies file to the working directory
-COPY requirements.txt .
+COPY pyproject.toml .
 
 # Install any needed dependencies specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir "setuptools>=61.0" && \
+    pip install --no-cache-dir .
 
 # Copy the local directory contents to the container's working directory
 COPY . .
