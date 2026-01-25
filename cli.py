@@ -41,13 +41,14 @@ def main():
     
     print(f"Preparing service: {module_name} from {args.url}")
 
-    # 1. Clone or Pull
-    if os.path.isdir(module_name):
-        print(f"Directory '{module_name}' exists. Updating...")
-        subprocess.check_call(['git', '-C', module_name, 'pull'])
-    else:
-        print(f"Cloning into '{module_name}'...")
-        subprocess.check_call(['git', 'clone', args.url, module_name])
+    if args.url.startswith("ssh://") or args.url.startswith("https://"):
+        # 1. Clone or Pull
+        if os.path.isdir(module_name):
+            print(f"Directory '{module_name}' exists. Updating...")
+            subprocess.check_call(['git', '-C', module_name, 'pull'])
+        else:
+            print(f"Cloning into '{module_name}'...")
+            subprocess.check_call(['git', 'clone', args.url, module_name])
 
     # 2. Ensure __init__.py exists (required for gateway.py dynamic import)
     init_file = os.path.join(module_name, '__init__.py')
