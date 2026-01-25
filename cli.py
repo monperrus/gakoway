@@ -53,9 +53,11 @@ def main():
     if os.path.isdir(args.url):
         # Handle local directory case
         print(f"Using local directory '{args.url}'...")
-        module_path = os.path.dirname(args.url)
-        # Add the directory to sys.path so it can be imported
-        sys.path.insert(0, module_path)
+        # necessary to load file and dependencies
+        if not os.path.exists(module_name):
+            os.symlink(os.path.abspath(args.url), module_name)
+            print(f"Created symlink '{module_name}' -> '{os.path.abspath(args.url)}'")
+
 
     # Install Dependencies
     print("Checking dependencies...")
