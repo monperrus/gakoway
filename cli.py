@@ -50,6 +50,13 @@ def main():
             print(f"Cloning into '{module_name}'...")
             subprocess.check_call(['git', 'clone', args.url, module_name])
 
+    if os.path.isdir(args.url):
+        # Handle local directory case
+        print(f"Using local directory '{args.url}'...")
+        module_path = os.path.dirname(args.url)
+        # Add the directory to sys.path so it can be imported
+        sys.path.insert(0, module_path)
+
     # Install Dependencies
     print("Checking dependencies...")
     req_txt = os.path.join(module_name, 'requirements.txt')
