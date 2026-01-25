@@ -27,6 +27,11 @@ def sanitize_name(name):
     return name
 
 def main():
+    # Check if running in a virtual environment
+    if not (sys.prefix != sys.base_prefix or os.path.exists(os.path.join(sys.prefix, 'pyvenv.cfg'))):
+        print("Error: This tool must be run within a virtual environment.")
+        sys.exit(1)
+
     parser = argparse.ArgumentParser(description="Clone and run a service with gateway.py")
     parser.add_argument("url", help="GitHub URL of the repository")
     args = parser.parse_args()
