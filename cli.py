@@ -42,7 +42,7 @@ def main():
     print(f"Preparing service: {module_name} from {args.url}")
 
     if args.url.startswith("ssh://") or args.url.startswith("https://"):
-        # 1. Clone or Pull
+        # Clone or Pull
         if os.path.isdir(module_name):
             print(f"Directory '{module_name}' exists. Updating...")
             subprocess.check_call(['git', '-C', module_name, 'pull'])
@@ -50,14 +50,7 @@ def main():
             print(f"Cloning into '{module_name}'...")
             subprocess.check_call(['git', 'clone', args.url, module_name])
 
-    # 2. Ensure __init__.py exists (required for gateway.py dynamic import)
-    init_file = os.path.join(module_name, '__init__.py')
-    if not os.path.exists(init_file):
-        print(f"Creating {init_file} to make it a package.")
-        with open(init_file, 'w') as f:
-            f.write(f'"""{module_name} module"""\n')
-
-    # 3. Install Dependencies
+    # Install Dependencies
     print("Checking dependencies...")
     req_txt = os.path.join(module_name, 'requirements.txt')
     pyproject = os.path.join(module_name, 'pyproject.toml')
@@ -75,7 +68,7 @@ def main():
     else:
         print("No dependency file found (requirements.txt, pyproject.toml, setup.py). Skipping installation.")
 
-    # 4. Run Gateway
+    # Run Gateway
     print("Starting gateway...")
     if not os.path.exists('gateway.py'):
         print("Error: gateway.py not found in current directory.")
