@@ -83,7 +83,9 @@ def main():
 
     try:
         # Run gateway.py using the same interpreter
-        subprocess.run([sys.executable, 'gateway.py'])
+        env = os.environ.copy()
+        env['PYTHONPATH'] = ':'.join(sys.path)
+        subprocess.run([sys.executable, 'gateway.py'], env=env)
     except KeyboardInterrupt:
         print("\nGateway stopped.")
 
