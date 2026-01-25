@@ -1,1 +1,1 @@
-def hello(): return 'world 42'
+def hello(): return 'world'
