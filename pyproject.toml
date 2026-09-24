@@ -9,3 +9,8 @@ dependencies = [
     "Flask>=3.1",
     "gunicorn>=24.1",
 ]
+
+[tool.setuptools]
+# test fixture packages (integration_tests, arg_test) are not part of the distribution
+py-modules = ["gateway", "cli"]
+packages = []

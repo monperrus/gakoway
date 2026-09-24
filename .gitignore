@@ -1,0 +1,10 @@
+__pycache__/
+*.egg-info/
+build/
+.env
+# the checkout doubles as a virtualenv
+bin/
+lib/
+pyvenv.cfg
+CACHEDIR.TAG
+cache
